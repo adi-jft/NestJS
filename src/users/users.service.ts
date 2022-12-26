@@ -1,36 +1,33 @@
 import { Get, Injectable } from '@nestjs/common';
-import { userData } from 'src/data';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { userDto } from './dto/user.dto';
+import { users } from './entity/users.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(private userData: userData) {}
+  constructor(
+    @InjectRepository(users)
+    private userRepository: Repository<users>
+    ) {}
 
-  findAll() {
-    return this.userData.userarr;
+  async findAll() {
+    return await this.userRepository.find();
   }
 
   async findOne(email: string){
-    return await this.userData.userarr.find((e) => e.email==email);
+    return await this.userRepository.findOneBy({email});
   }
 
   create(user: userDto) {
-    user.id = this.userData.userarr.length + 1;
-    this.userData.userarr.push(user);
-    return this.userData.userarr;
+    return this.userRepository.save(user);
   }
 
   update(id: number, user: userDto) {
-    console.log(user);
-    let ind = this.userData.userarr.findIndex((e) => e.id == id);
-    console.log(ind);
-    this.userData.userarr[ind] = user;
-    return this.userData.userarr;
+    return this.userRepository.update(id, user);
   }
 
   remove(id: number) {
-    let ind = this.userData.userarr.findIndex((e) => e.id == id);
-    this.userData.userarr.splice(ind, 1);
-    return this.userData.userarr;
+    return this.userRepository.delete(id);
   }
 }

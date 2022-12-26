@@ -15,7 +15,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get('/get')
-  findAll() {
+  get() {
     return this.usersService.findAll();
   }
 
