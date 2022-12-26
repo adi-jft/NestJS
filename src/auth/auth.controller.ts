@@ -21,4 +21,10 @@ export class AuthController {
     async login(@Body() user: userDto){
         return this.authService.login(user);
     }
+
+    @UseGuards(AuthGuard("jwt"))
+    @Get("/afterjwtauthguard")
+    afterjwtauth(){
+        return {message: "this message is after jwt auth guard"};
+    }
 }
